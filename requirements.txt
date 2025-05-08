@@ -1,8 +1,9 @@
 streamlit
 openai
+streamlit-webrtc
 pydub
 pillow
+PyMuPDF
 python-docx
 pandas
-PyMuPDF
-streamlit-webrtc
+openpyxl

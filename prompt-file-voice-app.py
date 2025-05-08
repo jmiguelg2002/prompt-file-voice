@@ -24,6 +24,8 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
 if "audio_chunks" not in st.session_state:
     st.session_state.audio_chunks = []
+if "user_voice_text" not in st.session_state:
+    st.session_state.user_voice_text = ""
 
 # --- Text/Prompt & File Upload ---
 st.header("📝 Prompt & File Upload")
@@ -81,8 +83,6 @@ ctx = webrtc_streamer(
     audio_processor_factory=AudioProcessor
 )
 
-user_voice_text = ""
-
 if st.button("⏹️ Transcribe Audio") and st.session_state.audio_chunks:
     audio_np = np.concatenate(st.session_state.audio_chunks).astype(np.int16)
     audio = AudioSegment(
@@ -95,13 +95,13 @@ if st.button("⏹️ Transcribe Audio") and st.session_state.audio_chunks:
         audio.export(f.name, format="wav")
         with open(f.name, "rb") as audio_file:
             transcript = openai.audio.transcriptions.create(model="whisper-1", file=audio_file)
-            user_voice_text = transcript.text
-            st.markdown(f"**🎤 Transcription:** {user_voice_text}")
+            st.session_state.user_voice_text = transcript.text
+            st.markdown(f"**🎤 Transcription:** {st.session_state.user_voice_text}")
 
 # --- Combine Input and Submit ---
 if st.button("🚀 Submit to OpenAI"):
     try:
-        combined_input = prompt + "\n" + file_text + "\n" + user_voice_text
+        combined_input = prompt + "\n" + file_text + "\n" + st.session_state.user_voice_text
 
         if uploaded_image and image_bytes:
             mime_type = uploaded_image.type or "image/png"

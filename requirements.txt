@@ -1,0 +1,8 @@
+streamlit
+openai
+Pillow
+pymupdf
+python-docx
+pandas
+pydub
+audiorecorder

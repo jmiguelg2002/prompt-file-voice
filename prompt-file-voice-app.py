@@ -1,6 +1,6 @@
 import streamlit as st
 import openai
-from streamlit_webrtc import webrtc_streamer, WebRtcMode, ClientSettings
+from streamlit_webrtc import webrtc_streamer, WebRtcMode
 import av
 from pydub import AudioSegment
 import tempfile
@@ -35,7 +35,6 @@ uploaded_file = st.file_uploader("Upload a file (PDF, TXT, DOCX, XLSX)", type=["
 file_text = ""
 image_bytes = None
 
-
 def extract_file_text(file):
     text = ""
     if file.type == "application/pdf":
@@ -53,11 +52,9 @@ def extract_file_text(file):
         text = df.to_string(index=False)
     return text
 
-
 def encode_image_to_base64(image_bytes, mime_type="image/png"):
     encoded = base64.b64encode(image_bytes).decode("utf-8")
     return f"data:{mime_type};base64,{encoded}"
-
 
 if uploaded_image:
     image_bytes = uploaded_image.read()
@@ -80,8 +77,8 @@ class AudioProcessor:
 ctx = webrtc_streamer(
     key="speech",
     mode=WebRtcMode.SENDRECV,
-    in_audio_enabled=True,
-    client_settings=ClientSettings(media_stream_constraints={"audio": True, "video": False}),
+    in_audio=True,
+    video=False,
     audio_processor_factory=AudioProcessor
 )
 
@@ -91,7 +88,7 @@ if st.button("⏹️ Transcribe Audio") and st.session_state.audio_chunks:
     audio_np = np.concatenate(st.session_state.audio_chunks).astype(np.int16)
     audio = AudioSegment(
         audio_np.tobytes(),
-        frame_rate=ctx.client_settings.audio_capture_format.sample_rate,
+        frame_rate=16000,  # Default fallback sample rate
         sample_width=2,
         channels=1
     )

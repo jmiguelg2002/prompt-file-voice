@@ -1,8 +1,10 @@
 streamlit
 openai
-Pillow
-pymupdf
+streamlit-webrtc
+pydub
+PyMuPDF
 python-docx
 pandas
-pydub
-audiorecorder
+Pillow
+av
+numpy

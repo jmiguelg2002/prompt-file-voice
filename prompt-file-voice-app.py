@@ -77,8 +77,7 @@ class AudioProcessor:
 ctx = webrtc_streamer(
     key="speech",
     mode=WebRtcMode.SENDRECV,
-    in_audio=True,
-    video=False,
+    media_stream_constraints={"audio": True, "video": False},
     audio_processor_factory=AudioProcessor
 )
 

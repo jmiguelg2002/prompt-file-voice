@@ -116,11 +116,10 @@ if st.button("🚀 Submit to OpenAI"):
                     }}
                 ]
             }]
-            model = "gpt-4-turbo"
         else:
             messages = [{"role": "user", "content": combined_input}]
-            model = "gpt-4"
 
+        model = "gpt-4-turbo"
         st.session_state.messages += messages
         response = openai.chat.completions.create(
             model=model,
